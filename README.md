@@ -1,6 +1,7 @@
 # Doobie Test Macro
 
 A Scala 3 macro library that automatically generates type-safe test cases for doobie queries and updates.
+Compatible with Specs2, Scalatest, Weaver and Munit.
 
 ## Overview
 
@@ -8,15 +9,15 @@ This macro analyzes your doobie query objects at compile time and generates stru
 
 ## Features
 
-- ✅ **Compile-time analysis**: Discovers all `Query0[A]`, `Update0`, and `Update[A]` methods and values automatically
-- ✅ **Type-safe with captured implicits**: Returns `List[TestCase]` with `CheckableQuery` that captures `Analyzable` at compile time
-- ✅ **Implicit parameter resolution**: Requires all method parameters (including `using` parameters) to have implicit instances in scope
-- ✅ **Zero runtime overhead**: All analysis and implicit resolution happens at compile time
-- ✅ **Handles type aliases**: Correctly identifies `Update0` even when used as a type alias
-- ✅ **Supports `Update[A]`**: Automatically converts parameterized updates to `Update0` via `.toUpdate0()`
-- ✅ **Rich error reporting**: Provides helpful compile-time errors when queries or required implicits are not found
-- ✅ **Supports both `def` and `val`**: Detects query definitions whether they're methods or values
-- ✅ **Overload-aware naming**: Differentiates overloaded methods by including parameter types in test names
+- **Compile-time analysis**: Discovers all `Query0[A]`, `Update0`, and `Update[A]` methods and values automatically
+- **Type-safe with captured implicits**: Returns `List[TestCase]` with `CheckableQuery` that captures `Analyzable` at compile 
+- **Implicit parameter resolution**: Requires all method parameters (including `using` parameters) to have implicit instances in ope
+- **Zero runtime overhead**: All analysis and implicit resolution happens at compile time
+- **Handles type aliases**: Correctly identifies `Update0` even when used as a type alias
+- **Supports `Update[A]`**: Automatically converts parameterized updates to `Update0` via `.toUpdate0()`
+- **Rich error reporting**: Provides helpful compile-time errors when queries or required implicits are not found
+- **Supports both `def` and `val`**: Detects query definitions whether they're methods or values
+- **Overload-aware naming**: Differentiates overloaded methods by including parameter types in test names
 
 ## Usage
 
@@ -176,7 +177,6 @@ inline def generateTestsDebug[A](inline instance: A): List[TestCase]
 6. **Update[A] Handling**: Converts `Update[A]` to `Update0` via `.toUpdate0(null.asInstanceOf[A])`
 7. **Analyzable Capture**: Wraps each query in `CheckableQuery` which captures the `Analyzable` instance
 8. **TestCase Construction**: Creates `TestCase` objects with `CheckableQuery`
-9. **List Construction**: Returns `Expr[List[TestCase]]` using `Expr.ofList`
 
 
 ## Error Handling
@@ -239,10 +239,10 @@ val testCases = generateTests(MyQueries)
 
 The macro performs several validations:
 
-1. ✅ Checks if the input is a class or object
-2. ⚠️  Warns if it's not a module (object)
-3. ❌ Errors if no Query0/Update0/Update[A] methods are found
-4. ❌ Errors if required implicit instances are not in scope
+1. Checks if the input is a class or object
+2. Warns if it's not a module (object)
+3. Errors if no Query0/Update0/Update[A] methods are found
+4. Errors if required implicit instances are not in scope
 
 
 ## Requirements
@@ -265,6 +265,4 @@ The macro performs several validations:
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
-
-Feel free to use this macro in your projects!
 
