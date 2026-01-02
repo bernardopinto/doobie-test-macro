@@ -1,0 +1,15 @@
+# Build output
+target/
+project/target/
+project/project/**
+
+# Build tools
+.bloop/
+.bsp/
+
+# IDE
+.cursor/
+.metals/
+.vscode/
+*/metals.sbt
+
