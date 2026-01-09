@@ -120,16 +120,15 @@ class DoobieQueriesSpec extends AnyFunSuite with IOChecker {
   testCases.foreach { testCase =>
     test(testCase.testName) {
       // No runtime type matching needed!
-      // Analyzable is captured at compile time
-      check(testCase.query.value)(using testCase.query.analyzable)
+      check(testCase.query)
     }
   }
 }
 ```
 
 The macro generates test cases where:
-- `testCase.query.value` is the actual `Query0[A]` or `Update0`
-- `testCase.query.analyzable` is the `Analyzable` instance captured at compile time
+- `testCase.query` is a `CheckableQuery` that can be directly passed to `check()`
+- `CheckableQuery` has an `Analyzable[CheckableQuery]` instance in its companion object, so no explicit `Analyzable` is needed in test scope
 
 ## API
 
@@ -141,9 +140,14 @@ trait CheckableQuery {
   val value: A                    // The actual Query0[_] or Update0
   val analyzable: Analyzable[A]   // Analyzable instance captured at compile time
 }
+
+object CheckableQuery {
+  // Analyzable[CheckableQuery] is provided, so you can directly use check(query)
+  given Analyzable[CheckableQuery] = ...
+}
 ```
 
-This existential type wrapper allows the macro to capture the `Analyzable` instance at compile time, eliminating the need for runtime type matching.
+This existential type wrapper allows the macro to capture the `Analyzable` instance at compile time, eliminating the need for runtime type matching. The companion object provides an `Analyzable[CheckableQuery]` instance, so you can directly pass `CheckableQuery` to `check()` without needing to provide an `Analyzable` in your test scope.
 
 ### TestCase
 
@@ -177,6 +181,7 @@ inline def generateTestsDebug[A](inline instance: A): List[TestCase]
 6. **Update[A] Handling**: Converts `Update[A]` to `Update0` via `.toUpdate0(null.asInstanceOf[A])`
 7. **Analyzable Capture**: Wraps each query in `CheckableQuery` which captures the `Analyzable` instance
 8. **TestCase Construction**: Creates `TestCase` objects with `CheckableQuery`
+9. **Simplified Testing**: The `CheckableQuery` companion object provides `Analyzable[CheckableQuery]`, so you can directly use `check(testCase.query)`.
 
 
 ## Error Handling

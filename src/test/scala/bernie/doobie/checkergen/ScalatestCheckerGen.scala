@@ -19,7 +19,7 @@ class ScalatestCheckerGen extends AnyFunSuite with IOChecker {
 
   generateTests(Queries).foreach { testCase =>
     test(testCase.testName) {
-      check(testCase.query.value)(using testCase.query.analyzable)
+      check(testCase.query)
     }
   }
 }

@@ -6,7 +6,6 @@ import bernie.doobie.checkergen.DoobieTestGen.{generateTests, given}
 import doobie.util.transactor.Transactor
 import cats.effect.IO
 import cats.effect.Resource
-import doobie.util.testing.Analyzable
 
 object WeaverCheckerGen extends IOSuite with IOChecker {
 
@@ -24,8 +23,7 @@ object WeaverCheckerGen extends IOSuite with IOChecker {
 
   generateTests(Queries).foreach { testCase =>
     test(testCase.testName) { case given Transactor[IO] =>
-      given Analyzable[testCase.query.A] = testCase.query.analyzable
-      check(testCase.query.value)
+      check(testCase.query)
     }
   }
 
