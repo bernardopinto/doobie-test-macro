@@ -4,7 +4,6 @@ import org.specs2.mutable.Specification
 import doobie.util.transactor.Transactor
 import cats.effect.IO
 import bernie.doobie.checkergen.DoobieTestGen.{generateTests, given}
-import doobie.util.testing.Analyzable
 
 class Specs2CheckerGen extends Specification with doobie.specs2.IOChecker {
 
@@ -17,8 +16,7 @@ class Specs2CheckerGen extends Specification with doobie.specs2.IOChecker {
   )
 
   generateTests(Queries).map { testCase =>
-    given Analyzable[testCase.query.A] = testCase.query.analyzable
-    check(testCase.query.value)
+    check(testCase.query)
   }
 
 }

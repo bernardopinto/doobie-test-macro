@@ -3,6 +3,7 @@ package bernie.doobie.checkergen
 import quoted.*
 import doobie.util.query
 import doobie.util.testing.Analyzable
+import doobie.util.testing.AnalysisArgs
 
 /** Wrapper that captures a query/update with its Analyzable instance at compile time. This allows
   * type-safe checking without runtime type matching.
@@ -20,6 +21,10 @@ object CheckableQuery {
     type A = T
     val value: A = v
     val analyzable: Analyzable[A] = a
+  }
+
+  given Analyzable[CheckableQuery] = new Analyzable[CheckableQuery] {
+    override def unpack(value: CheckableQuery): AnalysisArgs = value.analyzable.unpack(value.value)
   }
 }
 

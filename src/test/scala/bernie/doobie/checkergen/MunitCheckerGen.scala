@@ -4,7 +4,6 @@ import _root_.munit._
 import doobie.util.transactor.Transactor
 import cats.effect.IO
 import bernie.doobie.checkergen.DoobieTestGen.{generateTests, given}
-import doobie.util.testing.Analyzable
 
 class MunitCheckerGen extends FunSuite with doobie.munit.IOChecker {
 
@@ -22,8 +21,7 @@ class MunitCheckerGen extends FunSuite with doobie.munit.IOChecker {
 
   generateTests(Queries).foreach { testCase =>
     test(testCase.testName) {
-      given Analyzable[testCase.query.A] = testCase.query.analyzable
-      check(testCase.query.value)
+      check(testCase.query)
     }
   }
 
